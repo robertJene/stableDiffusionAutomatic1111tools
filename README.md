@@ -6,6 +6,11 @@ some scripts to help with Stable Diffusion Automatic1111
   to 50 or 100 so that the scripts have enough data to read through
 
 **Files:**
+  GPU_Stats.bat
+    This simply utilizes GPU_Stats.sh without having to run the code in an IDE or type a command
+    
+  GPU_Stats.sh
+    This uses nvidia-smi to query your GPU during trainging to monitor VRAM usage and GPU temperature
 
   embedding-show_loss+inpspect.bat
     Purpose: programatically uses embedding_loss.vbs (provided in this repository) and inspect_embedding_training.py which is available here:
