@@ -20,10 +20,10 @@ IF NOT EXIST "inspect_embedding_training.py" (
 
 
 Set folderPath=NULL
-Set afterFolderAsk=ROOT
+
 
 :ROOT
-
+Set afterFolderAsk=ROOT
 cls
 ECHO[
 ECHO show loss / inspect training -^> ROOT MENU
@@ -105,6 +105,7 @@ REM ****************************************************************************
 
 REM ***** SHOW LOSS *****
 :showLoss
+Set afterFolderAsk=showLoss
 cls
 ECHO[
 ECHO show loss / inspect training -^> SHOW LOSS -^> ASK FOR THRESHOLD
@@ -113,7 +114,7 @@ ECHO log folder:
 ECHO %folderPath%
 ECHO[
 
-SET afterFolderAsk=showLoss
+
 
 IF /I "%folderPath%"=="NULL" GOTO rootGetFolderPath
 IF "%folderPath%"=="" GOTO rootGetFolderPath
@@ -129,7 +130,7 @@ ECHO %folderPath%
 ECHO[
 ECHO The default threshold is 0.06 loss, and the output will only show numbers below that.
 ECHO type 'y' or to continue. Type a number to change the threshold.
-ECHO      ^*^*^*^*^* response can only be 'y' or a number! nothing else ^*^*^*^*^*
+ECHO      ^*^*^*^*^* press enter for the default or enter or a number! nothing else ^*^*^*^*^*
 ECHO      ^*^*^*^*^* the number can be an integer, or have a decimal. examples:
 ECHO                 0.08, 1, 0.03 (only enter one value)
 ECHO           enter x to go to ROOT MENU
@@ -139,8 +140,7 @@ ECHO[
 Set var=
 Set /P var=: 
 
-IF /I "%var%"=="y" GOTO showLossAskThresholdUseDefault
-IF /I "%var%"=="yes" GOTO showLossAskThresholdUseDefault
+IF /I "%var%"=="" GOTO showLossAskThresholdUseDefault
 
 IF /I "%var%"=="x" GOTO ROOT
 IF /I "%var%"=="exit" GOTO endOfLine
@@ -180,6 +180,7 @@ REM ****************************************************************************
 REM ***** CREATE GRAPHS *****
 
 :createGraphs
+Set afterFolderAsk=createGraphs
 cls
 ECHO[
 ECHO show loss / inspect training -^> CREATE GRAPHS
@@ -215,6 +216,7 @@ REM ***** INSPECT TRAINING *****
 
 :inspectTraining
 cls
+Set afterFolderAsk=inspectTraining
 ECHO[
 ECHO show loss / inspect training -^> INSPECT TRAINING
 ECHO[
