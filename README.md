@@ -6,6 +6,13 @@ some scripts to help with Stable Diffusion Automatic1111
   to 50 or 100 so that the scripts have enough data to read through
 
 **Files:**
+
+  requirements.txt
+    Run the commands in this file, they are required for the script:
+    inspect_embedding_training.py
+    from this REPO to work:
+    https://github.com/Zyin055/Inspect-Embedding-Training
+
   GPU_Stats.bat
     This simply utilizes GPU_Stats.sh without having to run the code in an IDE or type a command
     
