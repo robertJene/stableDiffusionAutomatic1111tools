@@ -2,6 +2,7 @@
 some scripts to help with Stable Diffusion, Automatic1111, Forge, and Kohya
 
 ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+
 Support me
 
 💲 My patreon:
@@ -22,6 +23,7 @@ use this to check the strength and loss of embeddings trained in the training ta
    **Files:**
 
     requirements.txt
+   
       Run the commands in this file, they are required for the script:
       inspect_embedding_training.py
       from this REPO to work:
@@ -39,15 +41,21 @@ use this to check the strength and loss of embeddings trained in the training ta
     
     Menu Options:
     f. Set/change the log folder where training data is
+   
     ~ use this menu to set the folder where the embedding training output is
       (Automatic1111 Train Tab -> Train Tab -> Log directory)
     NOTE: MUST be full absolute path with NO DOUBLE QUOTES (") because the script adds them itself
 
     1. Show Loss (find loss values below threshold)
+
     ~ this uses mbedding_loss.vbs, see section for that file below
+
     2. Create Graphs
+
     ~ this uses inspect_embedding_training.py to create graphs
+
     3. Inspect Training (strength values over 0.2 may mean overtrained)
+
     ~ this uses inspect_embedding_training.py to show the strength values in the embedding files
 
     embedding_loss.vbs
