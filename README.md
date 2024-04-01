@@ -1,6 +1,16 @@
 # stableDiffusionAutomatic1111tools
 some scripts to help with Stable Diffusion, Automatic1111, Forge, and Kohya
 
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+Support me
+
+💲 My patreon:
+https://www.patreon.com/RobertJene
+
+🍵 Buy me a coffee:
+https://www.buymeacoffee.com/robertjene
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+
 
 1. embedding_inspector
 use this to check the strength and loss of embeddings trained in the training tab of Automatic1111 and Forge
