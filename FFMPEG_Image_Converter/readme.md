@@ -10,5 +10,7 @@ ffmpeg.exe
 ~this is ffmpeg, 
 ~the script uses FFmpeg under the LGPLv2.1
 
-I got it here:
+You can get it here:
 https://ffmpeg.org/
+
+Put it in the same folder as the other script files
