@@ -3,6 +3,44 @@ Set workingPath=NULL
 IF EXIST "ConvertImages.bat" DEL "ConvertImages.bat">NUL
 TITLE FFMPEG_Image_Converter
 
+IF NOT EXIST "ffmpeg.exe" (
+ECHO[
+ECHO NOTICE: 
+ECHO[
+ECHO could not find the file ffmpeg.exe
+ECHO[
+ECHO you can get it from here:
+ECHO https://ffmpeg.org/
+ECHO[
+ECHO Download the .7z file, extract ffmpeg.exe, and put it in the
+ECHO same folder as these scripts
+ECHO[
+PAUSE
+GOTO endOfLine
+
+)
+
+IF NOT EXIST "FFMPEG_Image_Converter_Batch_Maker.vbs" (
+ECHO[
+ECHO NOTICE: 
+ECHO[
+ECHO could not find the file FFMPEG_Image_Converter_Batch_Maker.vbs
+ECHO[
+ECHO you can get it from here:
+ECHO https://github.com/robertJene/stableDiffusionAutomatic1111tools
+ECHO[
+ECHO all script files should be in the correct folder as downloaded from the repo
+ECHO[
+PAUSE
+GOTO endOfLine
+
+)
+
+
+
+
+
+
 :ROOT
 cls
 
@@ -222,5 +260,7 @@ GOTO ROOT
 Set Choice=
 Set askPath=
 Set workingPath=
+@ECHO ON
+
 
 
