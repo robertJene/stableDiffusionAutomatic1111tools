@@ -1,13 +1,11 @@
 # stableDiffusionAutomatic1111tools
 some scripts to help with Stable Diffusion, Automatic1111, Forge, and Kohya
 
-![image](https://github.com/robertJene/stableDiffusionAutomatic1111tools/assets/131090265/e7d99c48-a27a-421d-b488-e8ef5b01803f)
-
-
-
 ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
 
 Support me
+
+![image](https://github.com/robertJene/stableDiffusionAutomatic1111tools/assets/131090265/e7d99c48-a27a-421d-b488-e8ef5b01803f)
 
 💲 My patreon:
 https://www.patreon.com/RobertJene
