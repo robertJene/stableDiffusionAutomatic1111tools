@@ -9,7 +9,7 @@ If WScript.Arguments.Count <> 3 Then
     WScript.Quit
 End If
 
-Dim fileSys, WshShell, currentDirectory
+Dim fileSys, WshShell, currentDirectory, conflictFile
 
 ' Check if the workingPath folder exists
 Set fileSys = CreateObject("Scripting.FileSystemObject")
@@ -38,11 +38,13 @@ sourceExtension = WScript.Arguments(1)
 destinationExtension = WScript.Arguments(2)
 
 
+
+Set extensionList = CreateObject("System.Collections.ArrayList")
+
 Dim extensionList
 
 If sourceExtension = "all" And instr(destinationExtension, "png") Then
 
-  Set extensionList = CreateObject("System.Collections.ArrayList")
 
   extensionList.Add "webp"
   extensionList.Add "avif"
@@ -129,7 +131,8 @@ badX = int(0)
 filesX = int(0)
 filesY = int(0)
 
-'PUT IT HERE
+
+
 If sourceExtension = "all" Then
 
   For Each extension in extensionList
@@ -143,17 +146,21 @@ End If
 'wscript.quit
 
 
+
+
 If badX = 1 Then
   wscript.echo()
-  wscript.echo vbTab & "A file already exists with the destination name."
+  wscript.echo vbTab & "There is 1 conflict that would happen from renaming."
   wscript.echo vbTab & "Please manually rename it first."
   wscript.echo()
   wscript.quit()
 ElseIf badX > 1 Then
   wscript.echo()
-  wscript.echo vbTab & "There are " & badX & " files that already exist with the destination names."
+  wscript.echo vbTab & "There are " & badX & " conflicts that would happen from renaming."
   wscript.echo vbTab & "Please manually rename them first."
   wscript.echo()
+
+
   wscript.quit()
 End If
 
@@ -259,25 +266,51 @@ wscript.Quit
 
 Function countFiles(theExtension)
 
-  
+'right here
+
+  Set fileList = CreateObject("Scripting.Dictionary")
+  textX = int(0)
+
+
+tX = int(0)
+
   For Each file In folder.Files
 
-    If LCase(fileSys.GetExtensionName(file.Name)) = theExtension Then
 
-       If filesys.FileExists(workingPath & "\" & filesys.GetBaseName(file.Name) & "." & destinationExtension) Then
+    fileExt = LCase(fileSys.GetExtensionName(file.Path))
 
+    If lCase(fileExt) = lCase(theExtension) Then
+  
+      If filesys.FileExists(workingPath & "\" & filesys.GetBaseName(file.Name) & "." & "png") Then
+        wscript.echo " Filename conflict: " & filesys.GetBaseName(file.Name) & "." & "png"
+        logFileConflict(filesys.GetBaseName(file.Name) & "." & "png")
+        badX = badX + 1
+      End If
 
-         badX = badX + 1
-         WScript.Echo "File already exists: '" & filesys.GetBaseName(file.Name) & "." & destinationExtension & "'."
+      If LCase(fileSys.GetExtensionName(file.Name)) = theExtension Then
 
-       End If
+        For Each sExtension in extensionList
 
-    End If
+          If lCase(sExtension) <> fileExt Then
 
-    'count all of the files
-    If LCase(fileSys.GetExtensionName(file.Name)) = LCase(theExtension) Then
+            If filesys.FileExists(workingPath & "\" & filesys.GetBaseName(file.Name) & "." & sExtension) Then
+              wscript.echo " Filename conflict: " & filesys.GetBaseName(file.Name) & "." & sExtension
+              logFileConflict(filesys.GetBaseName(file.Name) & "." & sExtension)
+              badX = badX + 1
+            End If
 
-       filesY = filesY + 1
+          End If
+
+       Next
+
+      End If
+
+      'count all of the files
+      If LCase(fileSys.GetExtensionName(file.Name)) = LCase(theExtension) Then
+
+        filesY = filesY + 1
+
+      End If
 
     End If
 
@@ -343,7 +376,7 @@ Sub checkForDuplicates(folderPath)
   If dX = 0 Then
     wscript.echo("     No duplicate hashes were found")
   ElseIf dX = 1 Then
-    wscript.echo("     One duplicate hash was found")
+    wscript.echo("     One duplicate hashe was found")
   Else
     wscript.echo("     " & dX & " duplicate hashes were found")
   End If
@@ -437,6 +470,16 @@ Set folder = fileSys.GetFolder(workingPath)
       End If
     Next
   Next
+
+End Sub
+
+Sub logFileConflict(fileToLog)
+
+  Set conflictFile = fileSys.OpenTextFile("Conflicts.txt", 8, True)
+
+  conflictFile.WriteLine(fileToLog)
+  conflictFile.Close
+   
 
 End Sub
 
