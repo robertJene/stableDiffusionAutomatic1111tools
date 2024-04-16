@@ -1,72 +1,35 @@
 @ECHO OFF
 Set workingPath=NULL
 IF EXIST "ConvertImages.bat" DEL "ConvertImages.bat">NUL
+IF EXIST "Conflicts.txt" DEL "Conflicts.txt">NUL
 TITLE FFMPEG_Image_Converter
-
-IF NOT EXIST "ffmpeg.exe" (
-ECHO[
-ECHO NOTICE: 
-ECHO[
-ECHO could not find the file ffmpeg.exe
-ECHO[
-ECHO you can get it from here:
-ECHO https://ffmpeg.org/
-ECHO[
-ECHO Download the .7z file, extract ffmpeg.exe, and put it in the
-ECHO same folder as these scripts
-ECHO[
-PAUSE
-GOTO endOfLine
-
-)
-
-IF NOT EXIST "FFMPEG_Image_Converter_Batch_Maker.vbs" (
-ECHO[
-ECHO NOTICE: 
-ECHO[
-ECHO could not find the file FFMPEG_Image_Converter_Batch_Maker.vbs
-ECHO[
-ECHO you can get it from here:
-ECHO https://github.com/robertJene/stableDiffusionAutomatic1111tools
-ECHO[
-ECHO all script files should be in the correct folder as downloaded from the repo
-ECHO[
-PAUSE
-GOTO endOfLine
-
-)
-
-
-
-
-
 
 :ROOT
 cls
 
 ECHO FFMPEG Image Convertor: ROOT MENU
 ECHO[
-ECHO Working Path:
-ECHO %workingPath%
+ECHO  Working Path:
+ECHO  %workingPath%
 ECHO[
-ECHO F. Change the working path ^(folder^)
+ECHO  F. Change the working path ^(folder^)
 ECHO[
-ECHO D. Check for duplicate hashes in files
-ECHO E. List extensions in the folder
+ECHO  D. Check for duplicate hashes in files
+ECHO  E. List extensions in the folder
 ECHO[
-ECHO 1. Convert webp to png
-ECHO 2. Convert avif to png
-ECHO 3. Convert jpg to png
-ECHO 4. Convert jpeg to png
-ECHO 5. Convert bmp to png
-ECHO 6. Convert tif to png
-ECHO 7. Convert tiff to png
-ECHO 8. Convert heic to png
-ECHO 9. Convert jfif to png
+ECHO  1. Convert webp to png
+ECHO  2. Convert avif to png
+ECHO  3. Convert jpg to png
+ECHO  4. Convert jpeg to png
+ECHO  5. Convert bmp to png
+ECHO  6. Convert tif to png
+ECHO  7. Convert tiff to png
+ECHO  8. Convert heic to png
+ECHO  9. Convert jfif to png
 ECHO[
-ECHO P. Convert all 8 types to png
+ECHO  P. Convert all 8 types to png
 ECHO[
-ECHO exit = exit this batch
+ECHO  exit = exit this batch
 ECHO[
 
 Set Choice=
@@ -232,19 +195,29 @@ GOTO afterVbscriptConvert
 :convertAll
 ECHO[
 IF EXIST "ConvertImages.bat" DEL "ConvertImages.bat">NUL
+IF EXIST "Conflicts.txt" DEL "Conflicts.txt">NUL
 cscript //NOLOGO FFMPEG_Image_Converter_Batch_Maker.vbs "%workingPath%" "all" "png"
+
 Set ext=all
 GOTO afterVbscriptConvert
 
 
 
 :afterVbscriptConvert
+
+IF EXIST "Conflicts.txt" (
+  Set ext=
+  PAUSE
+  GOTO ROOT
+)
+
+
 ECHO[
 
 IF EXIST "ConvertImages.bat" CALL "ConvertImages.bat"
 REM start notepad.exe ConvertImages.bat
 
-PAUSE
+
 cscript //NOLOGO FFMPEG_Image_Converter_Batch_Maker.vbs "%workingPath%" "all" "check:png"
 
 IF EXIST "ConvertImages.bat" DEL "ConvertImages.bat"
@@ -260,7 +233,4 @@ GOTO ROOT
 Set Choice=
 Set askPath=
 Set workingPath=
-@ECHO ON
-
-
 
