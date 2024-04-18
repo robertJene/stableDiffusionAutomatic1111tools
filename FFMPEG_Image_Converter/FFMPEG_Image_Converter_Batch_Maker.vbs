@@ -182,6 +182,10 @@ batchFile.WriteLine()
 
 For Each extension in extensionList
 
+  wscript.echo()
+  wscript.echo extension
+  wscript.echo()
+
   For Each file In folder.Files
     If LCase(fileSys.GetExtensionName(file.Name)) = LCase(extension) Then
 
