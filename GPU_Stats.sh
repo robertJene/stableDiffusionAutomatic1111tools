@@ -1,44 +1,48 @@
 #!/bin/bash
 
-while true
-do
-    # Clear the screen
-    clear
+while true; do
+  # Clear the screen
+  clear
 
-    echo ""
+  # Get GPU information with nvidia-smi
+  GPU_INFO=$(nvidia-smi --query-gpu=index,gpu_name,memory.total,memory.used,memory.free,temperature.gpu --format=csv,noheader,nounits)
 
+  # Extract the GPU names and find the length of the longest one
+  LONGEST_GPU_NAME_LENGTH=0
 
-    # Get GPU information with nvidia-smi
-    GPU_INFO=$(nvidia-smi --query-gpu=index,gpu_name,memory.total,memory.used,memory.free,temperature.gpu --format=csv,noheader,nounits)
+  # Loop through each line of GPU_INFO
+  while IFS=',' read -r index gpu_name memory_total memory_used memory_free temp_gpu; do
+    # Strip leading/trailing spaces from gpu_name
+    gpu_name=$(echo "$gpu_name" | sed 's/^[ \t]*//;s/[ \t]*$//')
 
-    # Determine column widths
-    GPU_ID_WIDTH=$(echo "$GPU_INFO" | awk -F',' '{printf "%d", length($1)+2}')
-    MODEL_WIDTH=$(echo "$GPU_INFO" | awk -F',' '{printf "%d", length($2)+2}')
-    MEMORY_TOTAL_WIDTH=$(echo "$GPU_INFO" | awk -F',' '{printf "%d", length($3)+2}')
-    MEMORY_USED_WIDTH=$(echo "$GPU_INFO" | awk -F',' '{printf "%d", length($3)+2}')
-    MEMORY_FREE_WIDTH=$(echo "$GPU_INFO" | awk -F',' '{printf "%d", length($4)+2}')
-    GPU_TEMP_WIDTH=$(echo "$GPU_INFO" | awk -F',' '{printf "%d", length($4)+2}')
+    # Get the length of the gpu_name
+    gpu_name_length=${#gpu_name}
 
-    # Print header row
-    printf "\t| %-${GPU_ID_WIDTH}s | %-${MODEL_WIDTH}s | %-${MEMORY_TOTAL_WIDTH}s | %-${MEMORY_USED_WIDTH}s | %-${MEMORY_FREE_WIDTH}s | %-${GPU_TEMP_WIDTH}s |\n" "GPU ID" "Model" "Mem Total" "Mem Used" "Mem Free" "GPU Temp"
-    printf "\t|-%-${GPU_ID_WIDTH}s-|-%-${MODEL_WIDTH}s-|-%-${MEMORY_TOTAL_WIDTH}s-|-%-${MEMORY_USED_WIDTH}s-|-%-${MEMORY_FREE_WIDTH}s-|-%-${GPU_TEMP_WIDTH}s-|\n" "------" "-----" "---------" "--------" "--------" "--------"
+    # Update LONGEST_GPU_NAME_LENGTH if current gpu_name is longer
+    if (( gpu_name_length > LONGEST_GPU_NAME_LENGTH )); then
+      LONGEST_GPU_NAME_LENGTH=$gpu_name_length
+    fi
+  done <<< "$GPU_INFO"
 
-    # Print data rows
-    while read LINE
-    do
-        GPU_ID=$(echo "$LINE" | awk -F',' '{printf "%d", $1}' | sed -e 's/[[:space:]]*$//')
-        MODEL=$(echo "$LINE" | awk -F',' '{printf "%s", $2}')
-        MODEL=$(echo "$MODEL" | awk '{gsub(/ +$/,""); print}' | sed -e 's/[[:space:]]*$//')
-        MEMORY_TOTAL=$(echo "$LINE" | awk -F',' '{printf "%d", $3}')
-        MEMORY_USED=$(echo "$LINE" | awk -F',' '{printf "%d", $4}')
-        MEMORY_FREE=$(echo "$LINE" | awk -F',' '{printf "%d", $5}')
-        GPU_TEMP=$(echo "$LINE" | awk -F',' '{printf "%d", $6}')
+  # Print header row, adjusting column width for Model based on the longest GPU name
+  printf "| %6s | %-${LONGEST_GPU_NAME_LENGTH}s | %9s | %9s | %9s | %9s |\n" "GPU ID" "Model" "Mem Total" "Mem Used" "Mem Free" "GPU Temp"
+  printf "|--------|-%-${LONGEST_GPU_NAME_LENGTH}s-|-----------|-----------|-----------|-----------|\n" "--------------------"
 
-        printf "\t| %-${GPU_ID_WIDTH}s\t | %-${MODEL_WIDTH}s | %-${MEMORY_TOTAL_WIDTH}s  | %-${MEMORY_USED_WIDTH}d | %-${MEMORY_FREE_WIDTH}d | %-${GPU_TEMP_WIDTH}d |\n" "$GPU_ID" "$MODEL" "$MEMORY_TOTAL" "$MEMORY_USED" "$MEMORY_FREE" "$GPU_TEMP"
-    done <<< "$GPU_INFO"
+  # Loop through each line (GPU) in the output
+  while IFS=',' read -r GPU_ID MODEL MEMORY_TOTAL MEMORY_USED MEMORY_FREE GPU_TEMP; do
+    # Remove the word "NVIDIA" from the model name and trim extra spaces
+    MODEL=$(echo "$MODEL" | sed 's/^NVIDIA //' | sed -e 's/[[:space:]]*$//')
 
-    echo ""
+    # Remove trailing spaces and "C" from temperature
+    GPU_TEMP=$(echo "$GPU_TEMP" | sed -e 's/^[[:space:]]*//; s/[[:space:]]*$//')
+    GPU_TEMP=${GPU_TEMP%C}
 
-    # Wait 5 seconds before updating the data
-    sleep 5
+    # Print data row with adjusted formatting for the GPU model length
+    printf "| %6d | %-${LONGEST_GPU_NAME_LENGTH}s | %9d | %9d | %9d | %7d C |\n" "$GPU_ID" "$MODEL" "$MEMORY_TOTAL" "$MEMORY_USED" "$MEMORY_FREE" "$GPU_TEMP"
+  done <<< "$GPU_INFO"
+
+  echo ""
+
+  # Wait 5 seconds before updating the data
+  sleep 5
 done
